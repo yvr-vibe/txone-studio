@@ -469,19 +469,6 @@ function storePreset(id, detail) {
   existing.parameters = detail.parameters;
   existing.read = true;
   cabinetModes.remember(id, detail.parameters?.[24]);
-  if (!demo)
-    try {
-      localStorage.setItem(
-        'tonex-last-read',
-        JSON.stringify({
-          device: usb.device?.serialNumber,
-          readAt: new Date().toISOString(),
-          presets,
-        }),
-      );
-    } catch {
-      /* Local storage is optional. */
-    }
 }
 async function scanPresets() {
   if (demo) {
@@ -902,7 +889,6 @@ $('export-presets').onclick = () =>
     format: 'tonex-web-settings-v1',
     demo,
     exportedAt: new Date().toISOString(),
-    device: usb.descriptors?.serialNumber,
     note: 'Preset metadata and parameters only. Does not include tone model or IR binaries. Cannot be restored by this app.',
     presets,
   });

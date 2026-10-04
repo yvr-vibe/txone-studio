@@ -32,3 +32,12 @@ trademark owner. See README.md for details.
 Parameter table, preset display palette, and global USB command adaptations, and protocol cross-reference: Builty/TonexOneController
 https://github.com/Builty/TonexOneController
 Copyright (C) 2025 Greg Smith. Apache-2.0. See licenses/Apache-2.0.txt.
+
+
+Self-hosted fonts
+-----------------
+DM Sans and Manrope are distributed under the SIL Open Font License 1.1.
+License and copyright notices: licenses/OFL-dmsans.txt and licenses/OFL-manrope.txt.
+Sources: https://github.com/google/fonts/tree/main/ofl/dmsans
+         https://github.com/google/fonts/tree/main/ofl/manrope
+Font files downloaded from Google Fonts on 2026-10-04.

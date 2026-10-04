@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { spawn, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { readFile } from 'node:fs/promises';
 import { chromium } from 'playwright';
 import { build } from 'esbuild';
 
@@ -55,6 +56,10 @@ async function pageFor({
   if (mock) await context.addInitScript({ content: mock });
   const page = await context.newPage();
   page.on('pageerror', (error) => errors.push(error.message));
+  page.on('request', (request) => {
+    if (new URL(request.url()).origin !== new URL(base).origin)
+      errors.push(`Unexpected external request: ${request.url()}`);
+  });
   await page.goto(new URL(demo ? '?demo=1' : '', base).href);
   // Stabilize computed-style checks; the production UI still uses its transitions.
   await page.addStyleTag({
@@ -356,7 +361,9 @@ async function mockedPedalChecks() {
   });
   const { context, page } = await pageFor({
     demo: false,
-    mock: mock.outputFiles[0].text,
+    mock:
+      mock.outputFiles[0].text +
+      `localStorage.setItem('tonex-last-read', JSON.stringify({device:'OLD-SERIAL',presets:[]}));localStorage.setItem('tonex-theme','light');`,
   });
   await page.locator('#connect').click();
   await page.waitForFunction(
@@ -364,6 +371,32 @@ async function mockedPedalChecks() {
       document.querySelector('#global-masterVolume').value === '6.5' &&
       !document.querySelector('#global-masterVolume').disabled,
   );
+  assert.equal(
+    await page.evaluate(() => localStorage.getItem('tonex-last-read')),
+    null,
+  );
+  assert.equal(
+    await page.evaluate(() => localStorage.getItem('tonex-theme')),
+    'light',
+  );
+  await page.evaluate(() => document.fonts.ready);
+  assert.ok(
+    await page.evaluate(() =>
+      [...document.fonts].some(
+        (font) => font.family === 'DM Sans' && font.status === 'loaded',
+      ),
+    ),
+  );
+  const downloadPromise = page.waitForEvent('download');
+  await page.evaluate(() => document.querySelector('#export-presets').click());
+  const download = await downloadPromise;
+  const settings = JSON.parse(await readFile(await download.path(), 'utf8'));
+  assert.equal(Object.hasOwn(settings, 'device'), false);
+  assert.equal(settings.presets.length, 20);
+  assert.ok(
+    settings.presets.every((preset) => preset.name && preset.parameters.length),
+  );
+  assert.equal(JSON.stringify(settings).includes('TEST'), false);
   await page.locator('#nav-settings').click();
   await page.waitForFunction(
     () => !document.querySelector('#global-masterVolume').disabled,
@@ -425,6 +458,15 @@ async function mockedPedalChecks() {
       .locator('[data-global-toggle="directMonitoring"]')
       .getAttribute('aria-pressed'),
     'false',
+  );
+  await page.locator('#connect').click();
+  await page.waitForFunction(
+    () =>
+      document.querySelector('#status-text').textContent === 'Not connected',
+  );
+  assert.equal(
+    await page.evaluate(() => localStorage.getItem('tonex-last-read')),
+    null,
   );
   await context.close();
   const legacy = await build({

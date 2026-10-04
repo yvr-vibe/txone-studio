@@ -23,6 +23,7 @@ const bundle = await build({
   platform: 'browser',
   target: 'es2022',
   sourcemap: false,
+  external: ['../public/fonts/*'],
   legalComments: 'none',
   write: false,
   banner: {
@@ -70,9 +71,19 @@ const shell = [
   ...assets,
   'manifest.webmanifest',
   'public/icon.svg',
+  'public/fonts/dm-sans-latin-ext.woff2',
+  'public/fonts/dm-sans-latin.woff2',
+  'public/fonts/manrope-cyrillic-ext.woff2',
+  'public/fonts/manrope-cyrillic.woff2',
+  'public/fonts/manrope-greek.woff2',
+  'public/fonts/manrope-vietnamese.woff2',
+  'public/fonts/manrope-latin-ext.woff2',
+  'public/fonts/manrope-latin.woff2',
   'LICENSE',
   'THIRD_PARTY_LICENSES.txt',
   'licenses/Apache-2.0.txt',
+  'licenses/OFL-dmsans.txt',
+  'licenses/OFL-manrope.txt',
 ];
 const workerSource = await readFile(path.join(root, 'sw.js'), 'utf8');
 const cacheDeclaration = /const CACHE\s*=\s*[^;]+;/;

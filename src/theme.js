@@ -2,6 +2,8 @@
 (() => {
   let saved;
   try {
+    // Remove the unused pedal cache left by older releases.
+    localStorage.removeItem('tonex-last-read');
     saved = localStorage.getItem('tonex-theme');
   } catch {}
   const theme =

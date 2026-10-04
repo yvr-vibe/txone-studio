@@ -34,6 +34,14 @@ If the pedal does not appear or connect, check its power, the data cable, browse
 - **Export settings** downloads preset names and parameter values. It is not a complete preset backup and cannot be restored by this app.
 - Pedal data stays between your browser and pedal.
 
+## Privacy
+
+The app has no analytics or visitor counter and does not upload pedal data. USB access requires your action and browser permission. Preset data is kept in memory while connected; the app does not save it to browser storage. Older unused preset caches are removed when the updated app opens.
+
+Only theme and activation preferences are saved locally. Fonts are served with the app, without requests to Google Fonts. Export settings downloads preset names and parameter values to your device and omits the pedal serial number; share exported files only if you intend to share those settings.
+
+[GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages) hosts the site and logs visitor IP addresses for security. PayPal opens only when you click Support this project; its own privacy policy applies there.
+
 ## Contact and license
 
 Questions: [vanvibesmedia@gmail.com](mailto:vanvibesmedia@gmail.com). [Support this project](https://www.paypal.com/ncp/payment/A6DN7PPRV5PR6).

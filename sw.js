@@ -1,7 +1,7 @@
 // Scope cache names and URLs to this app so multiple Pages projects can coexist.
 const BASE = new URL('./', self.location.href);
 const PREFIX = `tonex-studio:${BASE.pathname}:`;
-const CACHE = PREFIX + 'v39';
+const CACHE = PREFIX + 'v40';
 const SHELL = [
   './',
   'index.html',
@@ -31,6 +31,14 @@ const SHELL = [
   'src/style.css',
   'manifest.webmanifest',
   'public/icon.svg',
+  'public/fonts/dm-sans-latin-ext.woff2',
+  'public/fonts/dm-sans-latin.woff2',
+  'public/fonts/manrope-cyrillic-ext.woff2',
+  'public/fonts/manrope-cyrillic.woff2',
+  'public/fonts/manrope-greek.woff2',
+  'public/fonts/manrope-vietnamese.woff2',
+  'public/fonts/manrope-latin-ext.woff2',
+  'public/fonts/manrope-latin.woff2',
 ].map((path) => new URL(path, BASE).href);
 self.addEventListener('install', (e) =>
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL))),
